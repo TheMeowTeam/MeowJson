@@ -80,7 +80,7 @@ public class JsonTest
         AtomicReference<Throwable> failedOnce = new AtomicReference<>(null);
 
         List<Thread> threads = new ArrayList<>(threadCount);
-        
+
         for (int i = 0; i < threadCount; ++i)
         {
             int finalI = i;
