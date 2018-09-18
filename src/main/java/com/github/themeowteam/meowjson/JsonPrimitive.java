@@ -7,6 +7,12 @@ public class JsonPrimitive implements JsonElement
     private final Object value;
     private final String asText;
 
+    public JsonPrimitive(short value)
+    {
+        this.value = value;
+        this.asText = String.valueOf(value);
+    }
+
     public JsonPrimitive(int value)
     {
         this.value = value;

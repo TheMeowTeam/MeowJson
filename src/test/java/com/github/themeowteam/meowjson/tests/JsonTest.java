@@ -20,19 +20,19 @@ public class JsonTest
     {
         JsonObject jsonObject = new JsonObject();
 
-        jsonObject.setInt("testInt", 42);
-        jsonObject.setLong("testLong", 42L);
-        jsonObject.setFloat("testFloat", 42.42F);
-        jsonObject.setDouble("testDouble", 42.42D);
-        jsonObject.setString("testString", "42");
-        jsonObject.setNull("testNull");
+        jsonObject.putInt("testInt", 42);
+        jsonObject.putLong("testLong", 42L);
+        jsonObject.putFloat("testFloat", 42.42F);
+        jsonObject.putDouble("testDouble", 42.42D);
+        jsonObject.putString("testString", "42");
+        jsonObject.putNull("testNull");
 
         JsonObject jsonObject2 = new JsonObject();
-        jsonObject2.setInt("testInt2", 42);
+        jsonObject2.putInt("testInt2", 42);
 
-        jsonObject.setObject("testObject", jsonObject2);
+        jsonObject.putJsonObject("testObject", jsonObject2);
 
-        jsonObject.setString("testRemove", "42");
+        jsonObject.putString("testRemove", "42");
         Assert.assertNotNull(jsonObject.remove("testRemove"));
 
         JsonArray array = new JsonArray();
@@ -60,7 +60,7 @@ public class JsonTest
         array.addString(0, "testRemove");
         Assert.assertNotNull(array.remove(0));
 
-        jsonObject.setArray("testArray", array);
+        jsonObject.putJsonArray("testArray", array);
 
         Assert.assertEquals(new JsonPrimitive(42), new JsonPrimitive(42));
         Assert.assertEquals(new JsonPrimitive(42L), new JsonPrimitive(42L));
@@ -80,6 +80,7 @@ public class JsonTest
         AtomicReference<Throwable> failedOnce = new AtomicReference<>(null);
 
         List<Thread> threads = new ArrayList<>(threadCount);
+        
         for (int i = 0; i < threadCount; ++i)
         {
             int finalI = i;
@@ -92,7 +93,7 @@ public class JsonTest
                     {
                         for (int j = 0; j < 1000; ++j)
                         {
-                            jsonObject.setInt(finalI + "_" + j, 42);
+                            jsonObject.putInt(finalI + "_" + j, 42);
                         }
 
                         for (int j = 0; j < 1000; ++j)
@@ -126,6 +127,7 @@ public class JsonTest
         }
 
         Throwable throwable = failedOnce.get();
+
         if (throwable != null)
         {
             throw new AssertionError(throwable);
@@ -141,6 +143,7 @@ public class JsonTest
         AtomicReference<Throwable> failedOnce = new AtomicReference<>(null);
 
         List<Thread> threads = new ArrayList<>(threadCount);
+
         for (int i = 0; i < threadCount; ++i)
         {
             int finalI = i;
@@ -187,6 +190,7 @@ public class JsonTest
         }
 
         Throwable throwable = failedOnce.get();
+
         if (throwable != null)
         {
             throw new AssertionError(throwable);

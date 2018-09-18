@@ -1,10 +1,8 @@
 package com.github.themeowteam.meowjson;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
-public class JsonObject implements JsonElement
+public class JsonObject implements JsonElement, Map<JsonPrimitive, JsonElement>
 {
     private final Map<JsonPrimitive, JsonElement> values;
 
@@ -13,65 +11,144 @@ public class JsonObject implements JsonElement
         this.values = this.createValueMap();
     }
 
-    protected Map<JsonPrimitive, JsonElement> createValueMap()
+    @Override
+    public JsonElement put(JsonPrimitive key, JsonElement value)
     {
-        return new HashMap<>();
+        return this.values.put(key, value);
     }
 
-    public void setInt(String key, int value)
-    {
-        Objects.requireNonNull(key);
-        this.values.put(new JsonPrimitive(key), new JsonPrimitive(value));
-    }
-
-    public void setLong(String key, long value)
+    public void putShort(String key, short value)
     {
         Objects.requireNonNull(key);
-        this.values.put(new JsonPrimitive(key), new JsonPrimitive(value));
+        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
     }
 
-    public void setFloat(String key, float value)
+    public void putInt(String key, int value)
     {
         Objects.requireNonNull(key);
-        this.values.put(new JsonPrimitive(key), new JsonPrimitive(value));
+        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
     }
 
-    public void setDouble(String key, double value)
+    public void putLong(String key, long value)
     {
         Objects.requireNonNull(key);
-        this.values.put(new JsonPrimitive(key), new JsonPrimitive(value));
+        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
     }
 
-    public void setString(String key, String value)
+    public void putFloat(String key, float value)
     {
         Objects.requireNonNull(key);
-        Objects.requireNonNull(value);
-        this.values.put(new JsonPrimitive(key), new JsonPrimitive(value));
+        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
     }
 
-    public void setObject(String key, JsonObject value)
+    public void putDouble(String key, double value)
     {
         Objects.requireNonNull(key);
-        Objects.requireNonNull(value);
-        this.values.put(new JsonPrimitive(key), value);
+        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
     }
 
-    public void setArray(String key, JsonArray value)
+    public void putString(String key, String value)
     {
         Objects.requireNonNull(key);
         Objects.requireNonNull(value);
-        this.values.put(new JsonPrimitive(key), value);
+        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
     }
 
-    public void setNull(String key)
+    public void putJsonObject(String key, JsonObject value)
     {
         Objects.requireNonNull(key);
-        this.values.put(new JsonPrimitive(key), JsonNull.INSTANCE);
+        Objects.requireNonNull(value);
+        this.put(new JsonPrimitive(key), value);
+    }
+
+    public void putJsonArray(String key, JsonArray value)
+    {
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(value);
+        this.put(new JsonPrimitive(key), value);
+    }
+
+    public void putNull(String key)
+    {
+        Objects.requireNonNull(key);
+        this.put(new JsonPrimitive(key), JsonNull.INSTANCE);
+    }
+
+    @Override
+    public void putAll(Map<? extends JsonPrimitive, ? extends JsonElement> m)
+    {
+        this.values.putAll(m);
+    }
+
+    @Override
+    public JsonElement remove(Object key)
+    {
+        Objects.requireNonNull(key);
+        return this.values.remove(key);
     }
 
     public JsonElement remove(String key)
     {
         Objects.requireNonNull(key);
-        return this.values.remove(new JsonPrimitive(key));
+        return this.remove(new JsonPrimitive(key));
+    }
+
+    @Override
+    public boolean containsKey(Object key)
+    {
+        return this.values.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value)
+    {
+        return this.values.containsValue(value);
+    }
+
+    @Override
+    public JsonElement get(Object key)
+    {
+        return this.values.get(key);
+    }
+
+    @Override
+    public void clear()
+    {
+        this.values.clear();
+    }
+
+    @Override
+    public Set<JsonPrimitive> keySet()
+    {
+        return this.values.keySet();
+    }
+
+    @Override
+    public Collection<JsonElement> values()
+    {
+        return this.values.values();
+    }
+
+    @Override
+    public Set<Entry<JsonPrimitive, JsonElement>> entrySet()
+    {
+        return this.values.entrySet();
+    }
+
+    @Override
+    public int size()
+    {
+        return this.values.size();
+    }
+
+    @Override
+    public boolean isEmpty()
+    {
+        return this.values.isEmpty();
+    }
+
+    protected Map<JsonPrimitive, JsonElement> createValueMap()
+    {
+        return new HashMap<>();
     }
 }
