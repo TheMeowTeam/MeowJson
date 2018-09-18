@@ -3,6 +3,7 @@ package com.github.themeowteam.meowjson.tests;
 import com.github.themeowteam.meowjson.JsonElement;
 import com.github.themeowteam.meowjson.JsonObject;
 import com.github.themeowteam.meowjson.MeowJson;
+import com.github.themeowteam.meowjson.serializer.INamedJsonField;
 import com.github.themeowteam.meowjson.serializer.JsonSerializationException;
 import com.github.themeowteam.meowjson.serializer.ObjectSerializer;
 import org.junit.Assert;
@@ -30,6 +31,7 @@ public class SerializationTest
         expectedSerializedObject.putInt("testInt", 4);
         expectedSerializedObject.putBoolean("testBoolean", false);
         expectedSerializedObject.putString("testString", "hello world");
+        expectedSerializedObject.putLong("myCustomNameTestLong", -1);
 
         Assert.assertEquals(serializedObject, expectedSerializedObject);
     }
@@ -46,6 +48,7 @@ public class SerializationTest
         jsonObject.putInt("testInt", 4);
         jsonObject.putBoolean("testBoolean", false);
         jsonObject.putString("testString", "hello world");
+        jsonObject.putLong("myCustomNameTestLong", -1);
 
         TestObject deserializedObject = serializer.deserialize(instance, jsonObject);
 
@@ -57,6 +60,9 @@ public class SerializationTest
         public int testInt = 4;
         protected boolean testBoolean = false;
         private String testString = "hello world";
+
+        @INamedJsonField(name = "myCustomNameTestLong")
+        private long testLong = -1;
 
         public TestObject() {}
 
