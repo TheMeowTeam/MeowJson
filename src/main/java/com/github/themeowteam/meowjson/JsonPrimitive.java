@@ -11,7 +11,17 @@ public class JsonPrimitive implements JsonElement
         this.value = value;
     }
 
+    public JsonPrimitive(Short value)
+    {
+        this.value = value;
+    }
+
     public JsonPrimitive(int value)
+    {
+        this.value = value;
+    }
+
+    public JsonPrimitive(Integer value)
     {
         this.value = value;
     }
@@ -21,7 +31,17 @@ public class JsonPrimitive implements JsonElement
         this.value = value;
     }
 
+    public JsonPrimitive(Long value)
+    {
+        this.value = value;
+    }
+
     public JsonPrimitive(float value)
+    {
+        this.value = value;
+    }
+
+    public JsonPrimitive(Float value)
     {
         this.value = value;
     }
@@ -31,9 +51,29 @@ public class JsonPrimitive implements JsonElement
         this.value = value;
     }
 
+    public JsonPrimitive(Double value)
+    {
+        this.value = value;
+    }
+
+    public JsonPrimitive(boolean value)
+    {
+        this.value = value;
+    }
+
+    public JsonPrimitive(Boolean value)
+    {
+        this.value = value;
+    }
+
     public JsonPrimitive(String value)
     {
         this.value = value;
+    }
+
+    public Object getValue()
+    {
+        return this.value;
     }
 
     @Override

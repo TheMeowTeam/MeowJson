@@ -1,7 +1,9 @@
 package com.github.themeowteam.meowjson.serializer;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  *                )\._.,--....,'``.
@@ -10,7 +12,9 @@ import java.lang.annotation.RetentionPolicy;
  *
  * Created by Jérémy L. on 18/09/2018
  */
+@Target(value = ElementType.FIELD)
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface IJsonField
+public @interface INamedJsonField
 {
+    String name();
 }

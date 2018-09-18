@@ -20,10 +20,12 @@ public class JsonTest
     {
         JsonObject jsonObject = new JsonObject();
 
+        jsonObject.putShort("testShort", (short) 42);
         jsonObject.putInt("testInt", 42);
         jsonObject.putLong("testLong", 42L);
         jsonObject.putFloat("testFloat", 42.42F);
         jsonObject.putDouble("testDouble", 42.42D);
+        jsonObject.putBoolean("testBoolean", true);
         jsonObject.putString("testString", "42");
         jsonObject.putNull("testNull");
 
@@ -36,6 +38,8 @@ public class JsonTest
         Assert.assertNotNull(jsonObject.remove("testRemove"));
 
         JsonArray array = new JsonArray();
+        array.addShort((short) 42);
+        array.addShort(0, (short) 42);
         array.addInt(42);
         array.addInt(0, 42);
         array.addLong(42);
@@ -44,6 +48,8 @@ public class JsonTest
         array.addFloat(0, 42.42F);
         array.addDouble(42.42D);
         array.addDouble(0, 42.42D);
+        array.addBoolean(true);
+        array.addBoolean(0, true);
         array.addString("42");
         array.addString(0, "42");
         array.addNull();
@@ -62,16 +68,18 @@ public class JsonTest
 
         jsonObject.putJsonArray("testArray", array);
 
+        Assert.assertEquals(new JsonPrimitive((short) 42), new JsonPrimitive((short) 42));
         Assert.assertEquals(new JsonPrimitive(42), new JsonPrimitive(42));
         Assert.assertEquals(new JsonPrimitive(42L), new JsonPrimitive(42L));
         Assert.assertEquals(new JsonPrimitive(42.42F), new JsonPrimitive(42.42F));
         Assert.assertEquals(new JsonPrimitive(42.42D), new JsonPrimitive(42.42D));
+        Assert.assertEquals(new JsonPrimitive(true), new JsonPrimitive(true));
         Assert.assertEquals(new JsonPrimitive("42"), new JsonPrimitive("42"));
 
         Assert.assertEquals(JsonNull.INSTANCE, new JsonNull());
     }
 
-    @Test
+    /**@Test
     public void testConcurrentJsonObject()
     {
         int threadCount = 100;
@@ -195,5 +203,5 @@ public class JsonTest
         {
             throw new AssertionError(throwable);
         }
-    }
+    }**/
 }

@@ -48,6 +48,11 @@ public class JsonArray implements JsonElement, List<JsonElement>
         this.add(new JsonPrimitive(value));
     }
 
+    public void addBoolean(boolean value)
+    {
+        this.add(new JsonPrimitive(value));
+    }
+
     public void addString(String value)
     {
         this.add(new JsonPrimitive(value));
@@ -89,6 +94,11 @@ public class JsonArray implements JsonElement, List<JsonElement>
     }
 
     public void addDouble(int index, double value)
+    {
+        this.add(index, new JsonPrimitive(value));
+    }
+
+    public void addBoolean(int index, boolean value)
     {
         this.add(index, new JsonPrimitive(value));
     }

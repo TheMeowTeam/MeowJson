@@ -1,7 +1,5 @@
 package com.github.themeowteam.meowjson.serializer;
 
-import com.github.themeowteam.meowjson.JsonElement;
-
 /**
  *                )\._.,--....,'``.
  * .b--.        /;   _.. \   _\  (`._ ,.
@@ -9,7 +7,15 @@ import com.github.themeowteam.meowjson.JsonElement;
  *
  * Created by Jérémy L. on 18/09/2018
  */
-public interface IJsonDeserializer<T>
+public class JsonSerializationException extends Exception
 {
-    T deserialize(JsonElement jsonElement);
+    public JsonSerializationException()
+    {
+        super();
+    }
+
+    public JsonSerializationException(String message)
+    {
+        super(message);
+    }
 }

@@ -14,64 +14,79 @@ public class JsonObject implements JsonElement, Map<JsonPrimitive, JsonElement>
     @Override
     public JsonElement put(JsonPrimitive key, JsonElement value)
     {
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(value);
         return this.values.put(key, value);
     }
 
-    public void putShort(String key, short value)
-    {
-        Objects.requireNonNull(key);
-        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
-    }
-
-    public void putInt(String key, int value)
-    {
-        Objects.requireNonNull(key);
-        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
-    }
-
-    public void putLong(String key, long value)
-    {
-        Objects.requireNonNull(key);
-        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
-    }
-
-    public void putFloat(String key, float value)
-    {
-        Objects.requireNonNull(key);
-        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
-    }
-
-    public void putDouble(String key, double value)
-    {
-        Objects.requireNonNull(key);
-        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
-    }
-
-    public void putString(String key, String value)
+    public JsonElement put(String key, JsonElement value)
     {
         Objects.requireNonNull(key);
         Objects.requireNonNull(value);
-        this.put(new JsonPrimitive(key), new JsonPrimitive(value));
+        return this.put(new JsonPrimitive(key), value);
     }
 
-    public void putJsonObject(String key, JsonObject value)
+    public JsonElement putShort(String key, short value)
+    {
+        Objects.requireNonNull(key);
+        return this.put(key, new JsonPrimitive(value));
+    }
+
+    public JsonElement putInt(String key, int value)
+    {
+        Objects.requireNonNull(key);
+        return this.put(key, new JsonPrimitive(value));
+    }
+
+    public JsonElement putLong(String key, long value)
+    {
+        Objects.requireNonNull(key);
+        return this.put(key, new JsonPrimitive(value));
+    }
+
+    public JsonElement putFloat(String key, float value)
+    {
+        Objects.requireNonNull(key);
+        return this.put(key, new JsonPrimitive(value));
+    }
+
+    public JsonElement putDouble(String key, double value)
+    {
+        Objects.requireNonNull(key);
+        return this.put(key, new JsonPrimitive(value));
+    }
+
+    public JsonElement putBoolean(String key, boolean value)
+    {
+        Objects.requireNonNull(key);
+        return this.put(key, new JsonPrimitive(value));
+    }
+
+    public JsonElement putString(String key, String value)
     {
         Objects.requireNonNull(key);
         Objects.requireNonNull(value);
-        this.put(new JsonPrimitive(key), value);
+        return this.put(key, new JsonPrimitive(value));
     }
 
-    public void putJsonArray(String key, JsonArray value)
+    public JsonElement putJsonObject(String key, JsonObject value)
     {
         Objects.requireNonNull(key);
         Objects.requireNonNull(value);
-        this.put(new JsonPrimitive(key), value);
+        return this.put(key, value);
     }
 
-    public void putNull(String key)
+    public JsonElement putJsonArray(String key, JsonArray value)
     {
         Objects.requireNonNull(key);
-        this.put(new JsonPrimitive(key), JsonNull.INSTANCE);
+        Objects.requireNonNull(value);
+        return this.put(key, value);
+    }
+
+    public JsonElement putNull(String key)
+    {
+        Objects.requireNonNull(key);
+        return this.put(key, JsonNull.INSTANCE);
     }
 
     @Override
@@ -99,6 +114,11 @@ public class JsonObject implements JsonElement, Map<JsonPrimitive, JsonElement>
         return this.values.containsKey(key);
     }
 
+    public boolean containsKey(String key)
+    {
+        return this.containsKey(new JsonPrimitive(key));
+    }
+
     @Override
     public boolean containsValue(Object value)
     {
@@ -109,6 +129,11 @@ public class JsonObject implements JsonElement, Map<JsonPrimitive, JsonElement>
     public JsonElement get(Object key)
     {
         return this.values.get(key);
+    }
+
+    public JsonElement get(String key)
+    {
+        return this.get(new JsonPrimitive(key));
     }
 
     @Override
@@ -172,5 +197,33 @@ public class JsonObject implements JsonElement, Map<JsonPrimitive, JsonElement>
     protected Map<JsonPrimitive, JsonElement> createValueMap()
     {
         return new HashMap<>();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof JsonObject))
+            return false;
+
+        JsonObject jsonObj = (JsonObject) obj;
+
+        if (jsonObj.size() != this.size())
+            return false;
+
+        for (JsonPrimitive key : this.keySet())
+        {
+            if (!jsonObj.containsKey(key))
+                return false;
+            else if (!Objects.equals(jsonObj.get(key), this.get(key)))
+                return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.values.hashCode();
     }
 }
