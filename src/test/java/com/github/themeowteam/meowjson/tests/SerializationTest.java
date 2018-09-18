@@ -8,8 +8,6 @@ import com.github.themeowteam.meowjson.serializer.ObjectSerializer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.logging.Logger;
-
 /**
  *                )\._.,--....,'``.
  * .b--.        /;   _.. \   _\  (`._ ,.
@@ -36,12 +34,41 @@ public class SerializationTest
         Assert.assertEquals(serializedObject, expectedSerializedObject);
     }
 
-    private static class TestObject
+    @Test
+    public void testObjectDeserialization() throws JsonSerializationException
+    {
+        MeowJson instance = new MeowJson();
+        ObjectSerializer<TestObject> serializer = (ObjectSerializer<TestObject>) instance.getObjectSerializer(TestObject.class);
+
+        TestObject expectedTestObject = new TestObject();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.putInt("testInt", 4);
+        jsonObject.putBoolean("testBoolean", false);
+        jsonObject.putString("testString", "hello world");
+
+        TestObject deserializedObject = serializer.deserialize(instance, jsonObject);
+
+        Assert.assertEquals(deserializedObject, expectedTestObject);
+    }
+
+    public static class TestObject
     {
         public int testInt = 4;
         protected boolean testBoolean = false;
         private String testString = "hello world";
 
         public TestObject() {}
+
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (!(obj instanceof TestObject))
+                return false;
+
+            TestObject testObj = (TestObject) obj;
+
+            return this.testInt == testObj.testInt && this.testBoolean == testObj.testBoolean && this.testString.equals(testObj.testString);
+        }
     }
 }

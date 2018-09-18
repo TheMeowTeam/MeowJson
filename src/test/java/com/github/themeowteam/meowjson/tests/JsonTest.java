@@ -79,7 +79,7 @@ public class JsonTest
         Assert.assertEquals(JsonNull.INSTANCE, new JsonNull());
     }
 
-    /**@Test
+    @Test
     public void testConcurrentJsonObject()
     {
         int threadCount = 100;
@@ -203,5 +203,5 @@ public class JsonTest
         {
             throw new AssertionError(throwable);
         }
-    }**/
+    }
 }

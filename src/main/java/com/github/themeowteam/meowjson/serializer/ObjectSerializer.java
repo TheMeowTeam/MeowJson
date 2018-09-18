@@ -74,7 +74,7 @@ public class ObjectSerializer<T> implements IJsonSerializer<T>
 
         try
         {
-            T object = this.assignableClass.getConstructor().newInstance();
+            T object = this.assignableClass.getDeclaredConstructor().newInstance();
 
             for (Field field : object.getClass().getDeclaredFields())
             {
