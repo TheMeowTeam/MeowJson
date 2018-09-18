@@ -10,8 +10,14 @@ public class JsonNull implements JsonElement
     }
 
     @Override
+    public String asString()
+    {
+        return "null";
+    }
+
+    @Override
     public boolean equals(Object obj)
     {
-        return obj != null && obj instanceof JsonNull;
+        return obj instanceof JsonNull;
     }
 }

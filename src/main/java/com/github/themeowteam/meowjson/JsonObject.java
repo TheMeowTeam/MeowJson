@@ -147,6 +147,28 @@ public class JsonObject implements JsonElement, Map<JsonPrimitive, JsonElement>
         return this.values.isEmpty();
     }
 
+    @Override
+    public String asString()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{");
+
+        Iterator<Entry<JsonPrimitive, JsonElement>> entryIterator = this.entrySet().iterator();
+
+        while (entryIterator.hasNext())
+        {
+            Entry<JsonPrimitive, JsonElement> entry = entryIterator.next();
+
+            stringBuilder.append(entry.getKey().asString()).append(":").append(entry.getValue().asString());
+
+            if (entryIterator.hasNext())
+                stringBuilder.append(",");
+        }
+
+        stringBuilder.append("}");
+        return stringBuilder.toString();
+    }
+
     protected Map<JsonPrimitive, JsonElement> createValueMap()
     {
         return new HashMap<>();

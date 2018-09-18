@@ -247,6 +247,26 @@ public class JsonArray implements JsonElement, List<JsonElement>
         return this.values.isEmpty();
     }
 
+    @Override
+    public String asString()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+
+        Iterator<JsonElement> iterator = this.iterator();
+
+        while (iterator.hasNext())
+        {
+            stringBuilder.append(iterator.next().asString());
+
+            if (iterator.hasNext())
+                stringBuilder.append(",");
+        }
+
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
+
     protected List<JsonElement> createValueList()
     {
         return new LinkedList<>();
