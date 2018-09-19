@@ -85,7 +85,7 @@ public class ObjectSerializer<T> implements IJsonSerializer<T>
 
                 if (((JsonObject) jsonElement).containsKey(fieldName))
                 {
-                    Class<?> fieldClass = field.getDeclaringClass();
+                    Class<?> fieldClass = field.getType();
                     JsonElement fieldJsonElement = ((JsonObject) jsonElement).get(fieldName);
                     Object futureFieldValue = deserializeByType(instance, fieldClass, fieldJsonElement);
 

@@ -9,6 +9,9 @@ import com.github.themeowteam.meowjson.serializer.ObjectSerializer;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Objects;
+import java.util.logging.Logger;
+
 /**
  *                )\._.,--....,'``.
  * .b--.        /;   _.. \   _\  (`._ ,.
@@ -55,6 +58,49 @@ public class SerializationTest
         Assert.assertEquals(deserializedObject, expectedTestObject);
     }
 
+    @Test
+    public void testRecursiveObjectSerialization() throws JsonSerializationException
+    {
+        MeowJson instance = new MeowJson();
+        ObjectSerializer<TestRecursiveObject> serializer = (ObjectSerializer<TestRecursiveObject>)
+                instance.getObjectSerializer(TestRecursiveObject.class);
+
+        TestRecursiveObject testRecursiveObject = new TestRecursiveObject();
+        JsonElement serializedObject = serializer.serialize(instance, testRecursiveObject);
+
+        JsonObject expectedSerializedObject = new JsonObject();
+        JsonObject expectedSerializedObjectRec = new JsonObject();
+        expectedSerializedObjectRec.putInt("testInt", 4);
+        expectedSerializedObjectRec.putBoolean("testBoolean", false);
+        expectedSerializedObjectRec.putString("testString", "hello world");
+        expectedSerializedObjectRec.putLong("myCustomNameTestLong", -1);
+        expectedSerializedObject.put("testObject", expectedSerializedObjectRec);
+
+        Assert.assertEquals(serializedObject, expectedSerializedObject);
+    }
+
+    @Test
+    public void testRecursiveObjectDeserialization() throws JsonSerializationException
+    {
+        MeowJson instance = new MeowJson();
+        ObjectSerializer<TestRecursiveObject> serializer = (ObjectSerializer<TestRecursiveObject>)
+                instance.getObjectSerializer(TestRecursiveObject.class);
+
+        TestRecursiveObject expectedTestRecursiveObject = new TestRecursiveObject();
+
+        JsonObject jsonObject = new JsonObject();
+        JsonObject jsonObjectRec = new JsonObject();
+        jsonObjectRec.putInt("testInt", 4);
+        jsonObjectRec.putBoolean("testBoolean", false);
+        jsonObjectRec.putString("testString", "hello world");
+        jsonObjectRec.putLong("myCustomNameTestLong", -1);
+        jsonObject.put("testObject", jsonObjectRec);
+
+        TestRecursiveObject deserializedObject = serializer.deserialize(instance, jsonObject);
+
+        Assert.assertEquals(deserializedObject, expectedTestRecursiveObject);
+    }
+
     public static class TestObject
     {
         public int testInt = 4;
@@ -75,6 +121,22 @@ public class SerializationTest
             TestObject testObj = (TestObject) obj;
 
             return this.testInt == testObj.testInt && this.testBoolean == testObj.testBoolean && this.testString.equals(testObj.testString);
+        }
+    }
+
+    public static class TestRecursiveObject
+    {
+        public TestObject testObject = new TestObject();
+
+        public TestRecursiveObject() {}
+
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (!(obj instanceof TestRecursiveObject))
+                return false;
+
+            return Objects.equals(this.testObject, ((TestRecursiveObject) obj).testObject);
         }
     }
 }
