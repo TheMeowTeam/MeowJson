@@ -1,7 +1,6 @@
 package com.github.themeowteam.meowjson.serializer;
 
 import com.github.themeowteam.meowjson.JsonElement;
-import com.github.themeowteam.meowjson.MeowJson;
 
 /**
  *                )\._.,--....,'``.
@@ -12,6 +11,6 @@ import com.github.themeowteam.meowjson.MeowJson;
  */
 public interface IJsonSerializer<T>
 {
-    JsonElement serialize(MeowJson instance, T object) throws JsonSerializationException;
-    T deserialize(MeowJson instance, JsonElement jsonElement) throws JsonSerializationException;
+    JsonElement serialize(SerializationContext context, T object) throws JsonSerializationException;
+    T deserialize(SerializationContext context, JsonElement jsonElement) throws JsonSerializationException;
 }

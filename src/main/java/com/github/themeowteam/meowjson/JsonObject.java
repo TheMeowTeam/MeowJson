@@ -196,7 +196,7 @@ public class JsonObject implements JsonElement, Map<JsonPrimitive, JsonElement>
 
     protected Map<JsonPrimitive, JsonElement> createValueMap()
     {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
 
     @Override

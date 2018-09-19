@@ -1,38 +1,33 @@
 package com.github.themeowteam.meowjson;
 
-import com.github.themeowteam.meowjson.serializer.IJsonSerializer;
-import com.github.themeowteam.meowjson.serializer.ObjectSerializer;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.github.themeowteam.meowjson.serializer.SerializationContext;
 
 public class MeowJson
 {
-    private final Map<Class, IJsonSerializer> objectSerializers;
-    private final int serializationDepthLimit = 0;
+    public static final MeowJson INSTANCE;
 
-    public MeowJson()
+    private final SerializationContext serializationContext;
+
+    private MeowJson()
     {
-        this.objectSerializers = new HashMap<>();
+        this.serializationContext = new SerializationContext();
     }
 
-    public <T> void registerObjectSerializer(Class<T> type, IJsonSerializer<T> serializer)
+    public SerializationContext getSerializationContext()
     {
-        this.objectSerializers.put(type, serializer);
+        return this.serializationContext;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> IJsonSerializer<T> getObjectSerializer(Class<T> typeClass)
+    public static class Builder
     {
-        for (Class clazz : this.objectSerializers.keySet())
-            if (typeClass.isAssignableFrom(clazz))
-                return this.objectSerializers.get(clazz);
-
-        return new ObjectSerializer<>(typeClass);
+        public MeowJson build()
+        {
+            return new MeowJson();
+        }
     }
 
-    public int getSerializationDepthLimit()
+    static
     {
-        return this.serializationDepthLimit;
+        INSTANCE = new Builder().build();
     }
 }

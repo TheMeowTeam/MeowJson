@@ -4,6 +4,11 @@ import java.util.Objects;
 
 public class JsonPrimitive implements JsonElement
 {
+    public static final Class[] ACCEPTABLE = {
+            short.class, int.class, long.class, float.class, double.class, boolean.class,
+            Short.class, Integer.class, Long.class, Float.class, Double.class, Boolean.class, String.class
+    };
+
     private final Object value;
 
     public JsonPrimitive(short value)

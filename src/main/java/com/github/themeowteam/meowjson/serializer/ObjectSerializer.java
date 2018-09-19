@@ -2,9 +2,9 @@ package com.github.themeowteam.meowjson.serializer;
 
 import com.github.themeowteam.meowjson.*;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.logging.Logger;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  *                )\._.,--....,'``.
@@ -15,11 +15,6 @@ import java.util.logging.Logger;
  */
 public class ObjectSerializer<T> implements IJsonSerializer<T>
 {
-    private static final Class[] PRIMITIVE_ACCEPTABLE = {
-            short.class, int.class, long.class, float.class, double.class, boolean.class,
-            Short.class, Integer.class, Long.class, Float.class, Double.class, Boolean.class, String.class
-    };
-
     private final Class<T> assignableClass;
 
     public ObjectSerializer(Class<T> assignableClass)
@@ -28,7 +23,13 @@ public class ObjectSerializer<T> implements IJsonSerializer<T>
     }
 
     @Override
-    public JsonElement serialize(MeowJson instance, T object) throws JsonSerializationException
+    public JsonElement serialize(SerializationContext context, T object) throws JsonSerializationException
+    {
+        return this.serialize0(context, object);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <A> JsonElement serialize0(SerializationContext context, T object) throws JsonSerializationException
     {
         JsonObject jsonObject = new JsonObject();
 
@@ -43,9 +44,15 @@ public class ObjectSerializer<T> implements IJsonSerializer<T>
 
                 field.setAccessible(true);
 
-                Class<?> fieldClass = field.getType();
-                Object fieldValue = field.get(object);
-                JsonElement serializedElement = serializeByType(instance, fieldClass, fieldValue);
+                Class<A> fieldClass = (Class<A>) field.getType();
+                A fieldValue = (A) field.get(object);
+                JsonElement serializedElement = null;
+
+                try
+                {
+                    serializedElement = context.serializeObject(fieldClass, fieldValue);
+                }
+                catch (JsonSerializationException ignored) {}
 
                 if (serializedElement == null)
                 {
@@ -67,7 +74,7 @@ public class ObjectSerializer<T> implements IJsonSerializer<T>
     }
 
     @Override
-    public T deserialize(MeowJson instance, JsonElement jsonElement) throws JsonSerializationException
+    public T deserialize(SerializationContext context, JsonElement jsonElement) throws JsonSerializationException
     {
         if (!(jsonElement instanceof JsonObject))
             throw new JsonSerializationException("Can't deserialize from an element which is not a JSON object");
@@ -87,7 +94,13 @@ public class ObjectSerializer<T> implements IJsonSerializer<T>
                 {
                     Class<?> fieldClass = field.getType();
                     JsonElement fieldJsonElement = ((JsonObject) jsonElement).get(fieldName);
-                    Object futureFieldValue = deserializeByType(instance, fieldClass, fieldJsonElement);
+                    Object futureFieldValue = null;
+
+                    try
+                    {
+                        futureFieldValue = context.deserializeObject(fieldClass, fieldJsonElement);
+                    }
+                    catch (JsonSerializationException ignored) {}
 
                     if (futureFieldValue == null)
                     {
@@ -108,50 +121,5 @@ public class ObjectSerializer<T> implements IJsonSerializer<T>
         {
             throw new JsonSerializationException(e.getMessage());
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static JsonElement serializeByType(MeowJson instance, Class<?> type, Object object)
-            throws JsonSerializationException
-    {
-        if (object == null)
-            return JsonNull.INSTANCE;
-
-        for (Class<?> primitiveAcceptable : PRIMITIVE_ACCEPTABLE)
-        {
-            if (primitiveAcceptable.isAssignableFrom(type))
-            {
-                try
-                {
-                    Constructor<JsonPrimitive> constructor = JsonPrimitive.class.getConstructor(primitiveAcceptable);
-                    return constructor.newInstance(object);
-                }
-                catch (IllegalArgumentException | ReflectiveOperationException ignored)
-                {
-                    return null;
-                }
-            }
-        }
-
-        IJsonSerializer fallbackSerializer = instance.getObjectSerializer(type);
-
-        if (fallbackSerializer != null)
-            return fallbackSerializer.serialize(instance, object);
-
-        return null;
-    }
-
-    private static Object deserializeByType(MeowJson instance, Class<?> type, JsonElement jsonElement)
-            throws JsonSerializationException
-    {
-        if (jsonElement instanceof JsonPrimitive)
-            return ((JsonPrimitive) jsonElement).getValue();
-
-        IJsonSerializer fallbackSerializer = instance.getObjectSerializer(type);
-
-        if (fallbackSerializer != null)
-            return fallbackSerializer.deserialize(instance, jsonElement);
-
-        return null;
     }
 }

@@ -1,14 +1,17 @@
 package com.github.themeowteam.meowjson.tests;
 
+import com.github.themeowteam.meowjson.JsonArray;
 import com.github.themeowteam.meowjson.JsonElement;
 import com.github.themeowteam.meowjson.JsonObject;
 import com.github.themeowteam.meowjson.MeowJson;
 import com.github.themeowteam.meowjson.serializer.INamedJsonField;
 import com.github.themeowteam.meowjson.serializer.JsonSerializationException;
-import com.github.themeowteam.meowjson.serializer.ObjectSerializer;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -24,11 +27,9 @@ public class SerializationTest
     @Test
     public void testObjectSerialization() throws JsonSerializationException
     {
-        MeowJson instance = new MeowJson();
-        ObjectSerializer<TestObject> serializer = (ObjectSerializer<TestObject>) instance.getObjectSerializer(TestObject.class);
-
+        MeowJson instance = MeowJson.INSTANCE;
         TestObject testObject = new TestObject();
-        JsonElement serializedObject = serializer.serialize(instance, testObject);
+        JsonElement serializedObject = instance.getSerializationContext().serializeObject(TestObject.class, testObject);
 
         JsonObject expectedSerializedObject = new JsonObject();
         expectedSerializedObject.putInt("testInt", 4);
@@ -42,9 +43,7 @@ public class SerializationTest
     @Test
     public void testObjectDeserialization() throws JsonSerializationException
     {
-        MeowJson instance = new MeowJson();
-        ObjectSerializer<TestObject> serializer = (ObjectSerializer<TestObject>) instance.getObjectSerializer(TestObject.class);
-
+        MeowJson instance = MeowJson.INSTANCE;
         TestObject expectedTestObject = new TestObject();
 
         JsonObject jsonObject = new JsonObject();
@@ -53,20 +52,18 @@ public class SerializationTest
         jsonObject.putString("testString", "hello world");
         jsonObject.putLong("myCustomNameTestLong", -1);
 
-        TestObject deserializedObject = serializer.deserialize(instance, jsonObject);
-
+        TestObject deserializedObject = instance.getSerializationContext().deserializeObject(TestObject.class, jsonObject);
         Assert.assertEquals(deserializedObject, expectedTestObject);
     }
 
     @Test
     public void testRecursiveObjectSerialization() throws JsonSerializationException
     {
-        MeowJson instance = new MeowJson();
-        ObjectSerializer<TestRecursiveObject> serializer = (ObjectSerializer<TestRecursiveObject>)
-                instance.getObjectSerializer(TestRecursiveObject.class);
-
+        MeowJson instance = MeowJson.INSTANCE;
         TestRecursiveObject testRecursiveObject = new TestRecursiveObject();
-        JsonElement serializedObject = serializer.serialize(instance, testRecursiveObject);
+
+        JsonElement serializedObject =
+                instance.getSerializationContext().serializeObject(TestRecursiveObject.class, testRecursiveObject);
 
         JsonObject expectedSerializedObject = new JsonObject();
         JsonObject expectedSerializedObjectRec = new JsonObject();
@@ -82,10 +79,7 @@ public class SerializationTest
     @Test
     public void testRecursiveObjectDeserialization() throws JsonSerializationException
     {
-        MeowJson instance = new MeowJson();
-        ObjectSerializer<TestRecursiveObject> serializer = (ObjectSerializer<TestRecursiveObject>)
-                instance.getObjectSerializer(TestRecursiveObject.class);
-
+        MeowJson instance = MeowJson.INSTANCE;
         TestRecursiveObject expectedTestRecursiveObject = new TestRecursiveObject();
 
         JsonObject jsonObject = new JsonObject();
@@ -96,7 +90,8 @@ public class SerializationTest
         jsonObjectRec.putLong("myCustomNameTestLong", -1);
         jsonObject.put("testObject", jsonObjectRec);
 
-        TestRecursiveObject deserializedObject = serializer.deserialize(instance, jsonObject);
+        TestRecursiveObject deserializedObject =
+                instance.getSerializationContext().deserializeObject(TestRecursiveObject.class, jsonObject);
 
         Assert.assertEquals(deserializedObject, expectedTestRecursiveObject);
     }
