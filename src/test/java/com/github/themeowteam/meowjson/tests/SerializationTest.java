@@ -105,6 +105,8 @@ public class SerializationTest
         @INamedJsonField(name = "myCustomNameTestLong")
         private long testLong = -1;
 
+        public transient int testWontSerializeInt = 42;
+
         public TestObject() {}
 
         @Override

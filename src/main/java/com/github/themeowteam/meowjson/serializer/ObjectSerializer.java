@@ -3,6 +3,7 @@ package com.github.themeowteam.meowjson.serializer;
 import com.github.themeowteam.meowjson.*;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Map;
 
@@ -37,6 +38,9 @@ public class ObjectSerializer<T> implements IJsonSerializer<T>
         {
             for (Field field : this.assignableClass.getDeclaredFields())
             {
+                if (Modifier.isTransient(field.getModifiers()))
+                    continue;
+                
                 String fieldName = field.getName();
 
                 if (field.isAnnotationPresent(INamedJsonField.class))
@@ -85,6 +89,9 @@ public class ObjectSerializer<T> implements IJsonSerializer<T>
 
             for (Field field : object.getClass().getDeclaredFields())
             {
+                if (Modifier.isTransient(field.getModifiers()))
+                    continue;
+
                 String fieldName = field.getName();
 
                 if (field.isAnnotationPresent(INamedJsonField.class))
